@@ -1,0 +1,21 @@
+.as-button {
+	font: 14px sans-serif;
+	padding: 8px 12px;
+	background: rgb(0,128,128);
+	text-align: center;
+	color: white;
+	cursor: pointer;
+	-webkit-user-select: none;
+}
+
+.as-button.toggled {
+	background: rgb(200,200,200);
+}
+
+.as-button:hover {
+	background: rgb(0,110,110);
+}
+
+.as-button:active {
+	background: rgb(0,90,90);
+}
