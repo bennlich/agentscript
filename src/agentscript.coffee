@@ -1954,6 +1954,29 @@ class ABM.Links extends ABM.AgentSet
 # Creating new models is done by subclassing class Model and overriding two 
 # virtual/abstract methods: `setup()` and `step()`
 
+# ### Evented
+
+# Modified from https://gist.github.com/contra/2759355.
+
+# The model animator emits `'step'` and `'draw'` events so that an arbitrary
+# function can be triggered every time the model is stepped or drawn (e.g. the patch inspector).
+
+class ABM.Evented
+  constructor: () ->
+    @events = {}
+
+  emit: (name, args...) ->
+    if @events[name]
+      cb args... for cb in @events[name]
+
+  on: (name, cb) ->
+    (@events[name]?=[]).push cb
+
+  off: (name, cb) ->
+    if @events[name]
+      if cb then @events[name] = (l for l in @events[name] when l isnt cb)
+      else delete @events[name]
+
 # ### Animator
   
 # Because not all models have the same amimator requirements, we build a class
@@ -1966,12 +1989,12 @@ class ABM.Links extends ABM.AgentSet
 # * [Timeout tutorial](http://javascript.info/tutorial/settimeout-setinterval)
 # * [Events and timing in depth](http://javascript.info/tutorial/events-and-timing-depth)
   
-class ABM.Animator
+class ABM.Animator extends ABM.Evented
   # Create initial animator for the model, specifying default rate (fps) and multiStep.
   # If multiStep, run the draw() and step() methods separately by draw() using
   # requestAnimFrame and step() using setTimeout.
   constructor: (@model, @rate=30, @multiStep=model.world.isHeadless) -> 
-    @isHeadless = model.world.isHeadless; @reset()
+    @isHeadless = model.world.isHeadless; @reset(); super()
   # Adjust animator.  Call before model.start()
   # in setup() to change default settings
   setRate: (@rate, @multiStep=@isHeadless) -> @resetTimes() # Change rate while running?
@@ -1995,8 +2018,8 @@ class ABM.Animator
   # Reset used by model.reset when resetting model.
   reset: -> @stop(); @ticks = @draws = 0
   # Two handlers used by animation loop
-  step: -> @ticks++; @model.step()
-  draw: -> @draws++; @model.draw()
+  step: -> @ticks++; @model.step(); @emit('step')
+  draw: -> @draws++; @model.draw(); @emit('draw')
   # step and draw the model once, mainly debugging
   once: -> @step(); @draw()
   # Get current time, with high resolution timer if available
