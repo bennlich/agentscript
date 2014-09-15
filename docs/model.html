@@ -355,7 +355,7 @@ The “if” is to avoid from ms=0</p>
             
             <div class="content"><div class='highlight'><pre>
 ABM.models = {} <span class="hljs-comment"># user space, put your models here</span>
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ABM</span>.<span class="hljs-title">Model</span>  </span></pre></div></div>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ABM</span>.<span class="hljs-title">Model</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ABM</span>.<span class="hljs-title">Evented</span></span></pre></div></div>
             
         </li>
         
@@ -405,6 +405,7 @@ Example:</p>
     divOrOpts, size=<span class="hljs-number">13</span>, minX=-<span class="hljs-number">16</span>, maxX=<span class="hljs-number">16</span>, minY=-<span class="hljs-number">16</span>, maxY=<span class="hljs-number">16</span>,
     isTorus=<span class="hljs-literal">false</span>, hasNeighbors=<span class="hljs-literal">true</span>, isHeadless=<span class="hljs-literal">false</span>
   )<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">super</span>()
     <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> divOrOpts <span class="hljs-keyword">is</span> <span class="hljs-string">'string'</span>
       div = divOrOpts
       <span class="hljs-property">@setWorldDeprecated</span> size, minX, maxX, minY, maxY, isTorus, hasNeighbors, isHeadless
@@ -913,7 +914,8 @@ to avoid redrawing the same static scene. Called by animator.</p>
     <span class="hljs-property">@patches</span>.draw <span class="hljs-property">@contexts</span>.patches  <span class="hljs-keyword">if</span> force <span class="hljs-keyword">or</span> <span class="hljs-property">@refreshPatches</span> <span class="hljs-keyword">or</span> <span class="hljs-property">@anim</span>.draws <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
     <span class="hljs-property">@links</span>.draw   <span class="hljs-property">@contexts</span>.links    <span class="hljs-keyword">if</span> force <span class="hljs-keyword">or</span> <span class="hljs-property">@refreshLinks</span>   <span class="hljs-keyword">or</span> <span class="hljs-property">@anim</span>.draws <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
     <span class="hljs-property">@agents</span>.draw  <span class="hljs-property">@contexts</span>.agents   <span class="hljs-keyword">if</span> force <span class="hljs-keyword">or</span> <span class="hljs-property">@refreshAgents</span>  <span class="hljs-keyword">or</span> <span class="hljs-property">@anim</span>.draws <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
-    <span class="hljs-property">@drawSpotlight</span> <span class="hljs-property">@spotlightAgent</span>, <span class="hljs-property">@contexts</span>.spotlight  <span class="hljs-keyword">if</span> <span class="hljs-property">@spotlightAgent</span>?</pre></div></div>
+    <span class="hljs-property">@drawSpotlight</span> <span class="hljs-property">@spotlightAgent</span>, <span class="hljs-property">@contexts</span>.spotlight  <span class="hljs-keyword">if</span> <span class="hljs-property">@spotlightAgent</span>?
+    <span class="hljs-property">@emit</span>(<span class="hljs-string">'draw'</span>)</pre></div></div>
             
         </li>
         
